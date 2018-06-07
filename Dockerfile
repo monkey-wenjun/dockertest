@@ -1,7 +1,15 @@
-FROM  hub.c.163.com/public/tomcat:7.0.28
-MAINTAINER netease
-RUN apt-get update && apt-get install -y maven openjdk-7-jdk
-COPY . ~/java
-WORKDIR ~/java
-RUN mvn package && cp -rf ~/java/target/robot-dt2/* /var/lib/tomcat7/webapps/ROOT/
-ENTRYPOINT /etc/init.d/tomcat7 start
+M hub.c.163.com/public/centos:7.2.1511
+RUN yum clean all
+RUN yum install -y yum-plugin-ovl || true
+RUN yum install -y vim tar wget curl rsync bzip2 iptables tcpdump less telnet net-tools lsof sysstat cronie python-setuptools
+RUN yum clean all
+RUN easy_install supervisor
+RUN cp -f /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+EXPOSE 22
+RUN mkdir -p /etc/supervisor/conf.d/
+RUN /usr/bin/echo_supervisord_conf > /etc/supervisord.conf
+RUN echo [include] >> /etc/supervisord.conf
+RUN echo 'files = /etc/supervisor/conf.d/*.conf' >> /etc/supervisord.conf
+COPY sshd.conf /etc/supervisor/conf.d/sshd.conf
+CMD ["/usr/bin/supervisord"]
+
