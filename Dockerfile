@@ -1,4 +1,4 @@
-M hub.c.163.com/public/centos:7.2.1511
+FROM hub.c.163.com/public/centos:7.2.1511
 RUN yum clean all
 RUN yum install -y yum-plugin-ovl || true
 RUN yum install -y vim tar wget curl rsync bzip2 iptables tcpdump less telnet net-tools lsof sysstat cronie python-setuptools
